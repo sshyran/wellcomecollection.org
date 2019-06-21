@@ -18,6 +18,7 @@ export default function WeDoc(css: string) {
         <html id="top" lang="en">
           <Head>
             {/* Google Tag Manager */}
+            <script src="https://unpkg.com/wavesurfer.js" />
             <script
               dangerouslySetInnerHTML={{
                 __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
