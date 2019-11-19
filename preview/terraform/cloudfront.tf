@@ -1,6 +1,26 @@
-data "aws_acm_certificate" "wellcomecollection_ssl_cert" {
+resource "aws_acm_certificate" "preview" {
   provider = "aws.us-east-1"
-  domain   = "wellcomecollection.org"
+  domain_name   = "preview.wellcomecollection.org"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "cert_validation" {
+  provider = "aws.routemaster"
+  name     = "${aws_acm_certificate.preview.domain_validation_options.0.resource_record_name}"
+  type     = "${aws_acm_certificate.preview.domain_validation_options.0.resource_record_type}"
+  zone_id  = "${local.routemaster_route53_zone_id}"
+  records  = ["${aws_acm_certificate.preview.domain_validation_options.0.resource_record_value}"]
+  ttl      = 60
+}
+
+resource "aws_acm_certificate_validation" "preview_validation" {
+  provider                = "aws.us-east-1"
+  certificate_arn         = "${aws_acm_certificate.preview.arn}"
+  validation_record_fqdns = ["${aws_route53_record.cert_validation.fqdn}"]
 }
 
 # This is a cache that essentially does nothing, but gives us a shield against our origin ALB
@@ -43,7 +63,7 @@ resource "aws_cloudfront_distribution" "preview" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = "${data.aws_acm_certificate.wellcomecollection_ssl_cert.arn}"
+    acm_certificate_arn      = "${aws_acm_certificate_validation.preview_validation.certificate_arn}"
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1"
   }
