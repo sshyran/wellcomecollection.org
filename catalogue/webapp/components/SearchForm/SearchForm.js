@@ -55,7 +55,7 @@ type Props = {|
   compact: boolean,
   shouldShowFilters: boolean,
   searchParams: SearchParams,
-  workTypeAggregations: ?(CatalogueAggregationBucket[]),
+  workTypeAggregations: CatalogueAggregationBucket[],
   placeholder?: string,
   url?: (searchParams: WorksUrlProps) => NextLinkType,
 |};

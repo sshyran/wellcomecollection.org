@@ -135,7 +135,7 @@ export const WorkPage = ({ work }: Props) => {
               compact={true}
               shouldShowFilters={false}
               searchParams={searchParams}
-              workTypeAggregations={null}
+              workTypeAggregations={[]}
             />
           </div>
         </div>

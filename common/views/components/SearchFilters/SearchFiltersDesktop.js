@@ -237,22 +237,26 @@ const SearchFiltersDesktop = ({
                 const workTypeObject = workTypeFilters.find(({ data }) => {
                   return data.id === id;
                 });
-                return (
-                  <NextLink
-                    key={id}
-                    {...worksUrl({
-                      ...searchParams,
-                      workType: searchParams.workType.filter(
-                        w => w !== workTypeObject.data.id
-                      ),
-                      page: 1,
-                    })}
-                  >
-                    <a>
-                      <CancelFilter text={workTypeObject.data.label} />
-                    </a>
-                  </NextLink>
-                );
+                if (workTypeObject) {
+                  return (
+                    <NextLink
+                      key={id}
+                      {...worksUrl({
+                        ...searchParams,
+                        workType: searchParams.workType.filter(
+                          w => w !== workTypeObject.data.id
+                        ),
+                        page: 1,
+                      })}
+                    >
+                      <a>
+                        <CancelFilter text={workTypeObject.data.label} />
+                      </a>
+                    </NextLink>
+                  );
+                } else {
+                  return null;
+                }
               })}
               <NextLink
                 passHref
